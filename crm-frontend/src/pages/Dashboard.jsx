@@ -1,18 +1,10 @@
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import React from "react";
+import AdminDashboard from "./AdminDashboard";
+import UserDashboard from "./UserDashboard";
 
-function Dashboard() {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1">
-        <Navbar />
-        <div className="p-6">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p>Welcome to CRM 2.0!</p>
-        </div>
-      </div>
-    </div>
-  );
+export default function Dashboard() {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = user?.role || localStorage.getItem("role") || "employee";
+  if (role === "admin") return <AdminDashboard />;
+  return <UserDashboard />;
 }
-export default Dashboard;

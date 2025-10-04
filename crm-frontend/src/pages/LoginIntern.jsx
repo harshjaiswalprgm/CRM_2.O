@@ -15,13 +15,14 @@ export default function LoginIntern() {
     try {
       const res = await api.post("/auth/intern/login", { email, password });
 
-      // store JWT in localStorage
+      // store JWT, role and user object in localStorage
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", "intern");
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.error || err.response?.data?.message || "Login failed");
     }
   };
 

@@ -1,71 +1,76 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function Navbar() {
+export default function Navbar() {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const role = localStorage.getItem("role");
-  const userName = localStorage.getItem("userName") || "";
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user");
+
+    // Redirect to correct login page
+    if (role === "admin") navigate("/login/admin");
+    else if (role === "employee") navigate("/login/employee");
+    else if (role === "intern") navigate("/login/intern");
+    else navigate("/");
   };
 
   return (
-    <nav className="bg-blue-600 text-white px-6 py-3 flex justify-between items-center">
-      <h1 className="font-bold text-xl">CRM 2.0</h1>
+    <nav className="bg-white shadow-sm px-6 py-3 flex justify-between items-center">
+      {/* Left side - Brand + Links */}
+      <div className="flex items-center space-x-6">
+        <div className="font-bold text-lg text-blue-600">CRM 2.0</div>
 
-      <div className="flex items-center space-x-4">
-        {/* Links */}
-        {role && (
-          <div className="flex items-center space-x-4">
-            <Link to="/dashboard" className="hover:text-gray-200">
-              Dashboard
+        {/* Always visible */}
+        <Link to="/dashboard" className="text-sm text-gray-700 hover:underline">
+          Dashboard
+        </Link>
+
+        {/* Role-specific links */}
+        {role === "admin" && (
+          <>
+            <Link to="/employees" className="text-sm text-gray-700 hover:underline">
+              Employees
             </Link>
-
-            {role === "admin" && (
-              <>
-                <Link to="/employees" className="hover:text-gray-200">
-                  Employees
-                </Link>
-                <Link to="/interns" className="hover:text-gray-200">
-                  Interns
-                </Link>
-              </>
-            )}
-
-            {role === "employee" && (
-              <>
-                <Link to="/my-tasks" className="hover:text-gray-200">
-                  My Tasks
-                </Link>
-                <Link to="/interns" className="hover:text-gray-200">
-                  Interns
-                </Link>
-              </>
-            )}
-
-            {role === "intern" && (
-              <Link to="/my-tasks" className="hover:text-gray-200">
-                My Tasks
-              </Link>
-            )}
-          </div>
+            <Link to="/interns" className="text-sm text-gray-700 hover:underline">
+              Interns
+            </Link>
+          </>
         )}
 
-        {/* User info + Logout */}
-        <div className="flex items-center space-x-4">
-          {userName && <span className="font-medium">{userName}</span>}
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"
-          >
-            Logout
-          </button>
+        {role === "employee" && (
+          <>
+            <Link to="/my-tasks" className="text-sm text-gray-700 hover:underline">
+              My Tasks
+            </Link>
+            <Link to="/interns" className="text-sm text-gray-700 hover:underline">
+              Interns
+            </Link>
+          </>
+        )}
+
+        {role === "intern" && (
+          <Link to="/my-tasks" className="text-sm text-gray-700 hover:underline">
+            My Tasks
+          </Link>
+        )}
+      </div>
+
+      {/* Right side - User + Logout */}
+      <div className="flex items-center space-x-4">
+        <div className="text-sm text-gray-700">
+          {user?.name || user?.email}
         </div>
+        <button
+          onClick={handleLogout}
+          className="px-3 py-1 border rounded text-sm hover:bg-gray-100"
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );
 }
-
-export default Navbar;

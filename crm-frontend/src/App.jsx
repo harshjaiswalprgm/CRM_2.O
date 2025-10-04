@@ -14,7 +14,9 @@ import Interns from "./pages/Interns";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 /**
- * Routing rules:
+ * Routing rules: I've set up the following routes:
+ *
+ * - /login -> general login page with links to specific logins
  * - /login/admin  -> Admin login
  * - /login/employee -> Employee login
  * - /login/intern -> Intern login
